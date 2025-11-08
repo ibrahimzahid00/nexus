@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NEXUS AI DIGITAL – Internship</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ==== CSS Variables for Theming ==== */
+    :root {
+      --bg: #f9f9f9;
+      --text: #222;
+      --heading: #111;
+      --card-bg: #fff;
+      --border: #e6e6e6;
+      --primary: #d31c1c;
+      --btn-bg: #fff;
+      --btn-text: #d31c1c;
+      --shadow: rgba(0,0,0,.07);
+      --hero-overlay: rgba(0,0,0,.55);
+    }
+    [data-theme="dark"] {
+      --bg: #121212;
+      --text: #f2f2f2;
+      --heading: #fff;
+      --card-bg: #1e1e1e;
+      --border: #333;
+      --primary: #ff4d4d;
+      --btn-bg: #ff4d4d;
+      --btn-text: #fff;
+      --shadow: rgba(0,0,0,.3);
+      --hero-overlay: rgba(0,0,0,.7);
+    }
+
+    /* ==== Reset & Base ==== */
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body {
+      font-family:'Poppins',sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      line-height:1.6;
+      transition:background .4s,color .4s;
+    }
+    a { text-decoration:none; color:inherit; }
+
+    /* ==== Header ==== */
+    header {
+      background:var(--primary);
+      color:#fff;
+      padding:1rem 0;
+      position:fixed;
+      width:100%;
+      top:0;
+      z-index:1000;
+      box-shadow:0 2px 8px var(--shadow);
+      transition:background .4s;
+    }
+    nav {
+      max-width:1200px;
+      margin:auto;
+      padding:0 1.5rem;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+    .logo { font-weight:700; font-size:1.4rem; }
+    nav ul { list-style:none; display:flex; gap:1.8rem; }
+    nav ul a { font-weight:500; transition:opacity .3s; }
+    nav ul a:hover { opacity:.8; text-decoration:underline; }
+
+    /* ==== Dark Mode Toggle ==== */
+    .theme-toggle {
+      position:fixed;
+      top:1.2rem;
+      right:1.5rem;
+      z-index:1100;
+      background:var(--card-bg);
+      border:1px solid var(--border);
+      border-radius:50px;
+      width:50px;
+      height:28px;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      padding:0 4px;
+      transition:all .3s;
+      box-shadow:0 1px 4px var(--shadow);
+    }
+    .theme-toggle::after {
+      content:'';
+      width:20px;
+      height:20px;
+      background:#fff;
+      border-radius:50%;
+      transition:transform .3s;
+      box-shadow:0 1px 3px rgba(0,0,0,.2);
+    }
+    [data-theme="dark"] .theme-toggle::after {
+      transform:translateX(22px);
+      background:#333;
+    }
+    .theme-toggle .icon {
+      position:absolute;
+      font-size:14px;
+      pointer-events:none;
+      transition:opacity .2s;
+    }
+    .theme-toggle .sun { left:8px; opacity:1; }
+    .theme-toggle .moon { right:8px; opacity:0; }
+    [data-theme="dark"] .theme-toggle .sun { opacity:0; }
+    [data-theme="dark"] .theme-toggle .moon { opacity:1; }
+
+    /* ==== Hero ==== */
+    .hero {
+      min-height:100vh;
+      background:linear-gradient(var(--hero-overlay),var(--hero-overlay)),
+                 url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1600&q=80')
+                 center/cover no-repeat;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      text-align:center;
+      padding:0 1.5rem;
+      color:#fff;
+    }
+    .hero h1 { font-size:3rem; margin-bottom:.8rem; font-weight:700; }
+    .hero p { font-size:1.25rem; max-width:680px; margin-bottom:1.8rem; }
+    .btn {
+      background:var(--btn-bg);
+      color:var(--btn-text);
+      padding:.85rem 2rem;
+      border-radius:50px;
+      font-weight:600;
+      transition:all .3s ease;
+      box-shadow:0 4px 12px var(--shadow);
+    }
+    .btn:hover {
+      background:var(--primary);
+      color:#fff;
+      transform:translateY(-3px);
+      box-shadow:0 6px 18px rgba(211,28,28,.4);
+    }
+
+    /* ==== To-Do App ==== */
+    .todo-app {
+      max-width:600px;
+      margin:120px auto 60px;
+      padding:0 1.5rem;
+    }
+    .todo-container {
+      background:var(--card-bg);
+      padding:2rem;
+      border-radius:16px;
+      box-shadow:0 6px 20px var(--shadow);
+    }
+    .input-box { display:flex; gap:.8rem; margin-bottom:1.5rem; }
+    #taskInput {
+      flex:1;
+      padding:.9rem 1.2rem;
+      font-size:1rem;
+      border:2px solid var(--border);
+      border-radius:50px;
+      background:var(--bg);
+      color:var(--text);
+      outline:none;
+      transition:border .3s;
+    }
+    #taskInput:focus { border-color:var(--primary); }
+    .task-list { list-style:none; max-height:400px; overflow-y:auto; }
+    .task-item {
+      display:flex;
+      align-items:center;
+      padding:.9rem 0;
+      border-bottom:1px solid var(--border);
+      animation:fadeIn .3s ease;
+    }
+    .task-item:last-child { border-bottom:none; }
+    .task-item.completed { opacity:.6; text-decoration:line-through; color:#888; }
+    .task-item input[type="checkbox"] {
+      margin-right:1rem;
+      width:1.3rem;
+      height:1.3rem;
+      accent-color:var(--primary);
+      cursor:pointer;
+    }
+    .task-text { flex:1; font-size:1.05rem; word-break:break-word; }
+    .edit-btn, .delete-btn {
+      background:none;
+      border:none;
+      font-size:1.2rem;
+      cursor:pointer;
+      padding:.3rem;
+      opacity:.7;
+      transition:opacity .3s,transform .2s;
+    }
+    .edit-btn:hover { opacity:1; transform:scale(1.1); color:#f39c12; }
+    .delete-btn:hover { opacity:1; transform:scale(1.1); color:#e74c3c; }
+    .footer {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-top:1.5rem;
+      font-size:.95rem;
+      color:#777;
+    }
+    .clear-btn {
+      background:none;
+      border:1px solid var(--border);
+      color:var(--text);
+      padding:.4rem .9rem;
+      border-radius:50px;
+      font-size:.9rem;
+      cursor:pointer;
+      transition:all .3s;
+    }
+    .clear-btn:hover {
+      background:var(--primary);
+      color:#fff;
+      border-color:var(--primary);
+    }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(-10px);} to{opacity:1;transform:translateY(0);} }
+
+    /* ==== Contact Section ==== */
+    .contact-section {
+      max-width:600px;
+      margin:60px auto;
+      padding:0 1.5rem;
+    }
+    .contact-card {
+      background:var(--card-bg);
+      padding:2.5rem;
+      border-radius:16px;
+      box-shadow:0 6px 20px var(--shadow);
+      text-align:center;
+    }
+    .contact-card h2 { margin-bottom:1rem; color:var(--primary); }
+    .contact-form { display:flex; flex-direction:column; gap:1rem; margin-top:1.5rem; }
+    .contact-form input,
+    .contact-form textarea {
+      padding:.9rem 1.2rem;
+      border:2px solid var(--border);
+      border-radius:50px;
+      background:var(--bg);
+      color:var(--text);
+      font-size:1rem;
+      outline:none;
+      transition:border .3s;
+    }
+    .contact-form input:focus,
+    .contact-form textarea:focus { border-color:var(--primary); }
+    .contact-form textarea { border-radius:12px; resize:vertical; min-height:100px; }
+    .social-links {
+      margin-top:1.5rem;
+      display:flex;
+      justify-content:center;
+      gap:1rem;
+    }
+    .social-links a {
+      font-size:1.4rem;
+      color:var(--text);
+      transition:transform .2s, color .3s;
+    }
+    .social-links a:hover { transform:scale(1.2); color:var(--primary); }
+
+    /* ==== Footer ==== */
+    footer {
+      background:#111;
+      color:#bbb;
+      text-align:center;
+      padding:1.8rem;
+      font-size:.9rem;
+      margin-top:4rem;
+      transition:background .4s;
+    }
+    [data-theme="dark"] footer { background:#000; color:#aaa; }
+
+    /* ==== Responsive ==== */
+    @media (max-width:768px){
+      .hero h1{font-size:2.3rem;}
+      .hero p{font-size:1.1rem;}
+      nav{padding:0 1rem;}
+      nav ul{gap:1rem;font-size:.95rem;}
+      .todo-app,.contact-section{margin-top:100px;padding:0 1rem;}
+      .theme-toggle{top:1rem;right:1rem;}
+    }
+    @media (max-width:480px){
+      .hero h1{font-size:2rem;}
+      .btn{padding:.7rem 1.6rem;font-size:.95rem;}
+      .input-box{flex-direction:column;}
+      #addBtn{width:100%;}
+      .footer{flex-direction:column;gap:1rem;text-align:center;}
+    }
+  </style>
+</head>
+<body data-theme="light">
+
+  <!-- Dark Mode Toggle -->
+  <div class="theme-toggle" id="themeToggle">
+    <span class="icon sun">Sun</span>
+    <span class="icon moon">Moon</span>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <nav>
+      <div class="logo">NEXUS AI DIGITAL</div>
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#todo">To-Do App</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero" id="home">
+    <h1 id="typewriter"></h1>
+    <p>Design, develop, and deliver production-ready web interfaces with clean code and modern UI.</p>
+    <a href="#todo" class="btn">Open To-Do App</a>
+  </section>
+
+  <!-- To-Do App -->
+  <section class="todo-app" id="todo">
+    <h2>Dynamic To-Do List</h2>
+    <div class="todo-container">
+      <div class="input-box">
+        <input type="text" id="taskInput" placeholder="Add a new task..." autofocus />
+        <button id="addBtn" class="btn">Add Task</button>
+      </div>
+      <ul id="taskList" class="task-list"></ul>
+      <div class="footer">
+        <p><span id="taskCount">0</span> tasks remaining</p>
+        <button id="clearCompleted" class="clear-btn">Clear Completed</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section class="contact-section" id="contact">
+    <div class="contact-card">
+      <h2>Get In Touch</h2>
+      <p>We’d love to hear from you! Drop a message and we’ll get back shortly.</p>
+
+      <form class="contact-form" onsubmit="event.preventDefault(); alert('Message sent! (demo)');">
+        <input type="text" placeholder="Your Name" required />
+        <input type="email" placeholder="Your Email" required />
+        <textarea placeholder="Your Message" required></textarea>
+        <button type="submit" class="btn">Send Message</button>
+      </form>
+
+      <div class="social-links">
+        <a href="#" title="Twitter">Twitter</a>
+        <a href="#" title="LinkedIn">LinkedIn</a>
+        <a href="#" title="GitHub">GitHub</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 NEXUS AI DIGITAL. All Rights Reserved.</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    /* ==== Typewriter ==== */
+    const txt = "Frontend Web Development Internship";
+    let i = 0;
+    const el = document.getElementById('typewriter');
+    function type() {
+      if (i < txt.length) { el.textContent += txt.charAt(i); i++; setTimeout(type, 80); }
+    }
+    window.addEventListener('load', () => setTimeout(type, 400));
+
+    /* ==== Dark Mode ==== */
+    const toggle = document.getElementById('themeToggle');
+    const body = document.body;
+    toggle.addEventListener('click', () => {
+      const cur = body.getAttribute('data-theme');
+      body.setAttribute('data-theme', cur === 'dark' ? 'light' : 'dark');
+    });
+
+    /* ==== To-Do App ==== */
+    const taskInput      = document.getElementById('taskInput');
+    const addBtn         = document.getElementById('addBtn');
+    const taskList       = document.getElementById('taskList');
+    const taskCount      = document.getElementById('taskCount');
+    const clearCompleted = document.getElementById('clearCompleted');
+
+    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+
+    function saveTasks() { localStorage.setItem('tasks', JSON.stringify(tasks)); updateTaskCount(); }
+    function updateTaskCount() {
+      taskCount.textContent = tasks.filter(t => !t.completed).length;
+    }
+    function renderTasks() {
+      taskList.innerHTML = '';
+      tasks.forEach((task, idx) => {
+        const li = document.createElement('li');
+        li.className = `task-item ${task.completed ? 'completed' : ''}`;
+        li.innerHTML = `
+          <input type="checkbox" ${task.completed ? 'checked' : ''}>
+          <span class="task-text">${task.text}</span>
+          <button class="edit-btn" title="Edit">Edit</button>
+          <button class="delete-btn" title="Delete">Delete</button>
+        `;
+
+        li.querySelector('input[type="checkbox"]').addEventListener('change', e => {
+          tasks[idx].completed = e.target.checked;
+          saveTasks(); renderTasks();
+        });
+        li.querySelector('.edit-btn').addEventListener('click', () => {
+          const newText = prompt('Edit task:', task.text);
+          if (newText && newText.trim()) { tasks[idx].text = newText.trim(); saveTasks(); renderTasks(); }
+        });
+        li.querySelector('.delete-btn').addEventListener('click', () => {
+          if (confirm('Delete this task?')) { tasks.splice(idx, 1); saveTasks(); renderTasks(); }
+        });
+        taskList.appendChild(li);
+      });
+    }
+
+    function addTask() {
+      const text = taskInput.value.trim();
+      if (text) { tasks.push({ text, completed: false }); taskInput.value = ''; saveTasks(); renderTasks(); }
+    }
+
+    addBtn.addEventListener('click', addTask);
+    taskInput.addEventListener('keypress', e => { if (e.key === 'Enter') addTask(); });
+    clearCompleted.addEventListener('click', () => {
+      tasks = tasks.filter(t => !t.completed);
+      saveTasks(); renderTasks();
+    });
+
+    renderTasks();
+  </script>
+</body>
+</html>
